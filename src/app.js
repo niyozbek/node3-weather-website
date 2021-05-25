@@ -3,7 +3,7 @@ const express = require('express')
 const hbs = require('hbs')
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 
 // Define paths for Express config
 const publicDirectory = path.join(__dirname, '../public')
@@ -65,13 +65,35 @@ app.get('/weather', (req, res) => {
                 return res.send({ error })
             }
             res.send({
-                forecast: forecastData,
+                forecast: forecastData.weather,
                 location,
                 address
             })
         })
     })
 })
+
+app.get('/weather-current', (req, res) => {
+    if (!req.query.longitude || !req.query.latitude) {
+        return res.send({
+            error: 'You must provide latitude and longitude'
+        })
+    }
+    const { latitude, longitude } = req.query
+
+    forecast(latitude, longitude, (error, forecastData) => {
+        if (error) {
+            return res.send({ error })
+        }
+        res.send({
+            forecast: forecastData.weather,
+            location: forecastData.location.name + ', ' + forecastData.location.region + ', ' + forecastData.location.country,
+            address: forecastData.location.name + ', ' + forecastData.location.region + ', ' + forecastData.location.country
+        })
+    })
+})
+
+
 
 app.get('/help/*', (req, res) => {
     res.render('404', {

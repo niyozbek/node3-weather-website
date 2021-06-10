@@ -1,2 +1,2 @@
 # node3-weather-website
-https://niyozbek-weather-application.herokuapp.com/
+Available at: https://niyozbek-weather-application.herokuapp.com/
